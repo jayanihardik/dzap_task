@@ -1,9 +1,8 @@
 import Disperse from "./component/Disperse";
-import "./App.css";
 
 function App() {
   return (
-    <div className="w-full">
+    <div className="w-full p-20 h-screen">
       <Disperse />
     </div>
   );

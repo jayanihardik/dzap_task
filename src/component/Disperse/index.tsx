@@ -1,6 +1,41 @@
 import { useMemo, useState } from "react";
+import {
+  findDuplicates,
+  isEmpty,
+  splitValueBYPattern,
+  validationByPattern,
+} from "../../helpers/utils";
 import INFO_ICON from "./images/info.svg";
+
 import "./index.css";
+
+const DisplayError = ({ listOfErorr }: any) => {
+  return (
+    <div className="flex rounded-md	p-3 m-3 border border-red-600">
+      <div className="w-7">
+        <img width={20} className="my-0.5" src={INFO_ICON} alt="Info" />
+      </div>
+      <div>
+        {listOfErorr.map((x: string) => (
+          <div className="text-red-500">{x}</div>
+        ))}
+      </div>
+    </div>
+  );
+};
+
+const DisplayDuplicated = ({ combineBalance, keepTheFirst }: any) => {
+  return (
+    <div className="flex justify-between m-3">
+      <div className="text-white">Duplicated</div>
+      <div className="text-red-500">
+        <span onClick={keepTheFirst}>Keep the first one</span>
+        <span> | </span>
+        <span onClick={combineBalance}>Combine Balance</span>
+      </div>
+    </div>
+  );
+};
 
 const Disperse = () => {
   const [inputValue, setInputValue] = useState("");
@@ -14,44 +49,23 @@ const Disperse = () => {
   const handleChange = (event: any) => {
     const value = event.target.value;
     setInputValue(value);
-    setErrors([]);
     setIsDuplicated(false);
+    setErrors([]);
   };
 
   const addressesValues: string[] = useMemo(() => {
-    if (inputValue.length) {
-      const splitAddressesValues = inputValue?.split(/\r|\r\n|\n/);
+    if (!!inputValue.length) {
+      const splitAddressesValues = inputValue?.split(splitValueBYPattern);
       return splitAddressesValues;
     }
     return [];
   }, [inputValue]);
 
   const validateAddress = () => {
-    const errorArr: string[] = [];
-    addressesValues.forEach((x, i) => {
-      const index = i + 1;
-      const splitter = x.includes("=") ? "=" : x.includes(",") ? "," : " ";
-      const item = x.split(splitter);
-      if (!x.startsWith("0x")) {
-        errorArr.push(`Line ${index} invalid Ethereum address.`);
-      } else if (item[0].length !== 42) {
-        errorArr.push(
-          `Line ${index} invalid Ethereum address and wrong amount`
-        );
-      } else if (isNaN(+item[1])) {
-        errorArr.push(`Line ${index} wrong amount`);
-      }
-    });
-
-    let findDuplicates = addressesValues.filter(
-      (item, index) => addressesValues.indexOf(item) !== index
-    );
-
-    if (findDuplicates) {
-      setIsDuplicated(true);
-    }
-
+    const errorArr = validationByPattern(addressesValues);
+    const duplicatedAddress = !isEmpty(findDuplicates(addressesValues));
     setErrors(errorArr);
+    setIsDuplicated(duplicatedAddress);
   };
 
   const keepTheFirst = () => {};
@@ -61,55 +75,51 @@ const Disperse = () => {
   console.log(addressesValues);
 
   return (
-    <div className="w-full max-w-xs">
-      <div className="flex justify-center m-10">
+    <div className="w-full">
+      <div className="flex justify-between m-3">
         <div className="text-white">Addresses with Amount</div>
         <div className="text-white">Upload File</div>
       </div>
-      <div className=" m-10">
-        <div>
-          <div className="text-white">
-            {(addressesValues.length &&
-              addressesValues?.map((x, i) => i + 1)) ||
+      <div className="m-3">
+        <div className="flex bg-black p-6">
+          <div className="text-white border-r-2 pr-3 border-white-600">
+            {(!isEmpty(addressesValues) &&
+              addressesValues?.map((x, i) => <div> {i + 1} </div>)) ||
               1}
           </div>
-          <div>
-            <textarea className="textarea" onChange={handleChange} />
+          <div className="w-full">
+            <textarea
+              className="pl-3 w-full h-full bg-black text-white min-h-300 outline-none"
+              onChange={handleChange}
+            />
           </div>
         </div>
       </div>
 
-      <div className="flex justify-center m-10">
-        <div className="text-white">Separated by ','or''or '='</div>
+      <div className="flex justify-between m-3">
+        <div className="text-white">Separated by ',' or ' ' or '='</div>
         <div className="text-white">Show Example</div>
       </div>
 
-      {isDuplicated && (
-        <div className="flex justify-center m-10">
-          <div className="text-white">Duplicated</div>
-          <div className="duplicated">
-            <span onClick={keepTheFirst}>Keep the first one</span>
-            <span> | </span>
-            <span onClick={combineBalance}>Combine Balance</span>
-          </div>
-        </div>
+      {isDuplicated && isEmpty(error) && (
+        <DisplayDuplicated
+          keepTheFirst={keepTheFirst}
+          combineBalance={combineBalance}
+        />
       )}
 
-      {!!error.length && !isDuplicated && (
-        <div className="error">
-          <div className="imgIcon">
-            <img width={20} className="image" src={INFO_ICON} alt="Info" />
-          </div>
-          <div>
-            {error.map((x) => (
-              <div className="text-red">{x}</div>
-            ))}
-          </div>
-        </div>
-      )}
+      {!isEmpty(error) && <DisplayError listOfErorr={error} />}
 
-      <div className="m-10">
-        <button className="button" onClick={onSubmit} type="submit">
+      <div className="m-3 ">
+        <button
+          className={
+            !isEmpty(error) || isDuplicated
+              ? "bg-black w-full text-white h-14 rounded-full mt-10"
+              : "bg-gradient-to-r from-cyan-500 to-blue-500 w-full text-white h-14 rounded-full mt-10"
+          }
+          onClick={onSubmit}
+          type="submit"
+        >
           Next
         </button>
       </div>
