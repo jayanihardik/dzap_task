@@ -29,9 +29,13 @@ const DisplayDuplicated = ({ combineBalance, keepTheFirst }: any) => {
     <div className="flex justify-between m-3">
       <div className="text-white">Duplicated</div>
       <div className="text-red-500">
-        <span onClick={keepTheFirst}>Keep the first one</span>
+        <span className="font-semibold" onClick={keepTheFirst}>
+          Keep the first one
+        </span>
         <span> | </span>
-        <span onClick={combineBalance}>Combine Balance</span>
+        <span className="font-semibold" onClick={combineBalance}>
+          Combine Balance
+        </span>
       </div>
     </div>
   );
@@ -77,8 +81,8 @@ const Disperse = () => {
   return (
     <div className="w-full">
       <div className="flex justify-between m-3">
-        <div className="text-white">Addresses with Amount</div>
-        <div className="text-white">Upload File</div>
+        <div className="text-white font-semibold">Addresses with Amount</div>
+        <div className="text-white font-semibold">Upload File</div>
       </div>
       <div className="m-3">
         <div className="flex bg-black p-6">
@@ -89,7 +93,7 @@ const Disperse = () => {
           </div>
           <div className="w-full">
             <textarea
-              className="pl-3 w-full h-full bg-black text-white min-h-300 outline-none"
+              className="pl-3 font-semibold w-full h-full bg-black text-white min-h-300 outline-none"
               onChange={handleChange}
             />
           </div>
@@ -97,8 +101,10 @@ const Disperse = () => {
       </div>
 
       <div className="flex justify-between m-3">
-        <div className="text-white">Separated by ',' or ' ' or '='</div>
-        <div className="text-white">Show Example</div>
+        <div className="text-white font-semibold">
+          Separated by ',' or ' ' or '='
+        </div>
+        <div className="text-stone-400 font-semibold">Show Example</div>
       </div>
 
       {isDuplicated && isEmpty(error) && (
@@ -114,8 +120,8 @@ const Disperse = () => {
         <button
           className={
             !isEmpty(error) || isDuplicated
-              ? "bg-black w-full text-white h-14 rounded-full mt-10"
-              : "bg-gradient-to-r from-cyan-500 to-blue-500 w-full text-white h-14 rounded-full mt-10"
+              ? "bg-black w-full text-white h-16 rounded-full mt-10 text-lg font-semibold"
+              : "bg-gradient-to-r from-purple-500 to-indigo-600 w-full text-white h-16 rounded-full mt-10 text-lg font-semibold"
           }
           onClick={onSubmit}
           type="submit"
