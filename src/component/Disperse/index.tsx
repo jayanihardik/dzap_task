@@ -5,7 +5,6 @@ import {
   splitValueBYPattern,
   validationByPattern,
 } from "../../helpers/utils";
-import INFO_ICON from "./images/info.svg";
 
 import "./index.css";
 
@@ -13,7 +12,7 @@ const DisplayError = ({ listOfErorr }: any) => {
   return (
     <div className="flex rounded-md	p-3 m-3 border border-red-600">
       <div className="w-7">
-        <img width={20} className="my-0.5" src={INFO_ICON} alt="Info" />
+        <img width={20} className="my-0.5" src="/images/info.svg" alt="Info" />
       </div>
       <div>
         {listOfErorr.map((x: string) => (
@@ -120,8 +119,8 @@ const Disperse = () => {
         <button
           className={
             !isEmpty(error) || isDuplicated
-              ? "bg-black w-full text-white h-16 rounded-full mt-10 text-lg font-semibold"
-              : "bg-gradient-to-r from-purple-500 to-indigo-600 w-full text-white h-16 rounded-full mt-10 text-lg font-semibold"
+              ? "bg-black w-full text-white h-16 rounded-full mt-10 text-lg font-semibold mb-4 outline-none"
+              : "bg-gradient-to-r from-purple-500 to-indigo-600 w-full text-white h-16 rounded-full mb-4 outline-none mt-10 text-lg font-semibold"
           }
           onClick={onSubmit}
           type="submit"
